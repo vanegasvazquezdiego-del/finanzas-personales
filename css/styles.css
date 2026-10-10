@@ -1,0 +1,36 @@
+/* Estilos complementarios a Tailwind */
+:root { color-scheme: light dark; }
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+
+/* Scrollbar elegante */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #a5b4fc; border-radius: 8px; }
+.dark ::-webkit-scrollbar-thumb { background: #4338ca; }
+
+/* Animaciones sutiles */
+.card-enter { animation: fadeUp .35s ease both; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tablas */
+.table-wrap { overflow-x: auto; }
+th.sortable { cursor: pointer; user-select: none; }
+
+/* Toast */
+#toast { transition: transform .3s ease, opacity .3s ease; }
+
+/* Barra de progreso */
+.progress-track { height: 8px; border-radius: 9999px; background: rgba(100,116,139,.25); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 9999px; transition: width .4s ease; }
+
+/* Print: solo reporte */
+@media print {
+  body * { visibility: hidden; }
+  #print-area, #print-area * { visibility: visible; }
+  #print-area { position: absolute; inset: 0; padding: 24px; }
+}
