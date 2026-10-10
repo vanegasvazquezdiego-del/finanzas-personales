@@ -1,10 +1,14 @@
 /* Service Worker — Finanzas Personales PWA (cache-first con fallback offline) */
-const CACHE_NAME = 'finanzas-pwa-v1';
+const CACHE_NAME = 'finanzas-pwa-v2';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './css/styles.css',
+  './css/tailwind.css',
+  './vendor/chart.umd.min.js',
+  './vendor/jspdf.umd.min.js',
+  './vendor/jspdf-autotable.min.js',
   './js/store.js',
   './js/charts.js',
   './js/transactions.js',
