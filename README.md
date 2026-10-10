@@ -1,5 +1,8 @@
 # Finanzas Personales — PWA de gestión y control de gastos
 
+🌐 **En línea 24/7:** https://vanegasvazquezdiego-del.github.io/finanzas-personales/
+· 💻 Repo: https://github.com/vanegasvazquezdiego-del/finanzas-personales
+
 Aplicación web profesional, sin build y sin backend. HTML5 + Tailwind CSS + JavaScript vanilla (módulos ES) + Chart.js. Datos 100% locales (LocalStorage). Instalable en escritorio como PWA.
 
 ## Estructura
