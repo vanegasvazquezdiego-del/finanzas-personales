@@ -77,13 +77,14 @@ export function saveBudgets(b) {
   localStorage.setItem(BUDGET_KEY, JSON.stringify(b));
 }
 
-export function validateTx({ type, date, category, amount }) {
+export function validateTx({ type, date, category, amount, time }) {
   const errors = [];
   if (type !== 'ingreso' && type !== 'gasto') errors.push('Tipo inválido.');
   if (!date || Number.isNaN(Date.parse(date))) errors.push('Fecha inválida.');
   if (!category || !ALL_CATEGORIES.includes(category)) errors.push('Categoría inválida.');
   const n = Number(amount);
   if (!Number.isFinite(n) || n <= 0) errors.push('El monto debe ser mayor a 0.');
+  if (time && !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) errors.push('Hora inválida (usa formato HH:MM, 00:00–23:59).');
   return errors;
 }
 
@@ -94,6 +95,7 @@ export function addTransaction(list, tx) {
     id: uid(),
     type: tx.type,
     date: tx.date,
+    time: (tx.time || '').slice(0, 5),
     category: tx.category,
     amount: Math.round(Number(tx.amount) * 100) / 100,
     note: (tx.note || '').trim().slice(0, 200),
@@ -173,9 +175,9 @@ export function applyFilters(list, { from = '', to = '', category = '', q = '', 
 }
 
 export function toCSV(list) {
-  const header = ['id', 'tipo', 'fecha', 'categoria', 'monto', 'nota'];
+  const header = ['id', 'tipo', 'fecha', 'hora', 'categoria', 'monto', 'nota'];
   const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const rows = list.map((t) => [t.id, t.type, t.date, t.category, t.amount, t.note].map(esc).join(','));
+  const rows = list.map((t) => [t.id, t.type, t.date, t.time || '', t.category, t.amount, t.note].map(esc).join(','));
   return [header.join(','), ...rows].join('\n');
 }
 
@@ -197,18 +199,18 @@ export function seedDemo() {
     return d.toISOString().slice(0, 10);
   };
   const demo = [
-    { type: 'ingreso', date: iso(2), category: 'Nómina', amount: 2200, note: 'Salario mensual' },
-    { type: 'ingreso', date: iso(9), category: 'Freelance', amount: 450, note: 'Proyecto web' },
-    { type: 'gasto', date: iso(1), category: 'Comida', amount: 42.5, note: 'Supermercado' },
-    { type: 'gasto', date: iso(2), category: 'Transporte', amount: 18, note: 'Metro mensual' },
-    { type: 'gasto', date: iso(3), category: 'Vivienda', amount: 650, note: 'Alquiler' },
-    { type: 'gasto', date: iso(4), category: 'Servicios', amount: 85, note: 'Luz + internet' },
-    { type: 'gasto', date: iso(5), category: 'Ocio', amount: 60, note: 'Cine y cena' },
-    { type: 'gasto', date: iso(6), category: 'Salud', amount: 35, note: 'Farmacia' },
-    { type: 'gasto', date: iso(12), category: 'Compras', amount: 120, note: 'Ropa' },
-    { type: 'gasto', date: iso(20), category: 'Comida', amount: 95, note: 'Compra semanal' },
-    { type: 'gasto', date: iso(35), category: 'Comida', amount: 110, note: 'Mes anterior' },
-    { type: 'ingreso', date: iso(32), category: 'Nómina', amount: 2200, note: 'Salario anterior' },
+    { type: 'ingreso', date: iso(2), time: '09:00', category: 'Nómina', amount: 2200, note: 'Salario mensual' },
+    { type: 'ingreso', date: iso(9), time: '18:30', category: 'Freelance', amount: 450, note: 'Proyecto web' },
+    { type: 'gasto', date: iso(1), time: '13:15', category: 'Comida', amount: 42.5, note: 'Supermercado' },
+    { type: 'gasto', date: iso(2), time: '08:05', category: 'Transporte', amount: 18, note: 'Metro mensual' },
+    { type: 'gasto', date: iso(3), time: '10:00', category: 'Vivienda', amount: 650, note: 'Alquiler' },
+    { type: 'gasto', date: iso(4), time: '12:00', category: 'Servicios', amount: 85, note: 'Luz + internet' },
+    { type: 'gasto', date: iso(5), time: '21:45', category: 'Ocio', amount: 60, note: 'Cine y cena' },
+    { type: 'gasto', date: iso(6), time: '17:20', category: 'Salud', amount: 35, note: 'Farmacia' },
+    { type: 'gasto', date: iso(12), time: '19:10', category: 'Compras', amount: 120, note: 'Ropa' },
+    { type: 'gasto', date: iso(20), time: '11:30', category: 'Comida', amount: 95, note: 'Compra semanal' },
+    { type: 'gasto', date: iso(35), time: '14:00', category: 'Comida', amount: 110, note: 'Mes anterior' },
+    { type: 'ingreso', date: iso(32), time: '09:00', category: 'Nómina', amount: 2200, note: 'Salario anterior' },
   ];
   let list = [];
   for (const d of demo) list = addTransaction(list, d);

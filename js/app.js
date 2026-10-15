@@ -109,7 +109,8 @@ function fillCategorySelects() {
 }
 
 function filteredTx() {
-  const sorted = [...state.tx].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const key = (t) => `${t.date} ${t.time || ''}`;
+  const sorted = [...state.tx].sort((a, b) => (key(a) < key(b) ? 1 : -1));
   const { from, to, category, q, type } = state.filters;
   const query = q.trim().toLowerCase();
   return sorted.filter((t) => {
@@ -117,9 +118,14 @@ function filteredTx() {
     if (category && t.category !== category) return false;
     if (from && t.date < from) return false;
     if (to && t.date > to) return false;
-    if (query && !`${t.category} ${t.note} ${t.amount} ${t.date}`.toLowerCase().includes(query)) return false;
+    if (query && !`${t.category} ${t.note} ${t.amount} ${t.date} ${t.time || ''}`.toLowerCase().includes(query)) return false;
     return true;
   });
+}
+
+function nowTime() {
+  const d = new Date();
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
 }
 
 function paintTable() {
@@ -144,6 +150,7 @@ function startEdit(id) {
   fillCategorySelects();
   $('f-category').value = t.category;
   $('f-date').value = t.date;
+  $('f-time').value = t.time || '';
   $('f-amount').value = t.amount;
   $('f-note').value = t.note || '';
   $('form-title').textContent = 'Editar transacción';
@@ -156,6 +163,7 @@ function resetForm() {
   state.editingId = null;
   $('tx-form').reset();
   $('f-date').value = new Date().toISOString().slice(0, 10);
+  $('f-time').value = nowTime();
   fillCategorySelects();
   $('form-title').textContent = 'Nueva transacción';
   $('btn-cancel-edit').classList.add('hidden');
@@ -205,6 +213,7 @@ function bindEvents() {
     const payload = {
       type: $('f-type').value,
       date: $('f-date').value,
+      time: $('f-time').value,
       category: $('f-category').value,
       amount: $('f-amount').value,
       note: $('f-note').value
@@ -286,6 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initCurrency();
   $('f-date').value = new Date().toISOString().slice(0, 10);
+  $('f-time').value = nowTime();
   $('month-picker').value = state.currentMonth;
   fillCategorySelects();
   bindEvents();

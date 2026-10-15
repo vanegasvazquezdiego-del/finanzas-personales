@@ -1,5 +1,10 @@
 /* Estilos complementarios a Tailwind */
-:root { color-scheme: light dark; }
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+/* Controles nativos (select, date, time, month) legibles en ambos temas */
+select option, select optgroup { background-color: #ffffff; color: #0f172a; }
+html.dark select option, html.dark select optgroup { background-color: #1e293b; color: #f1f5f9; }
 
 html { scroll-behavior: smooth; }
 body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }

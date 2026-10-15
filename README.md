@@ -88,7 +88,7 @@ Es porque el navegador aún no emitió `beforeinstallprompt` (normal la primera 
 ## Funcionalidades
 
 - **Dashboard:** saldo total histórico, ingresos/egresos/balance del mes (selector de mes), doughnut de gastos por categoría y barras de evolución 6 meses.
-- **Transacciones:** formulario ingreso/gasto (fecha, categoría, monto, nota), editar/eliminar, filtros por fechas + categoría + tipo + buscador en tiempo real, exportar CSV y PDF (jsPDF, con fallback a impresión).
+- **Transacciones:** formulario ingreso/gasto (fecha, hora, categoría, monto, nota), editar/eliminar, filtros por fechas + categoría + tipo + buscador en tiempo real, exportar CSV y PDF (jsPDF, con fallback a impresión).
 - **Asesoría 50/30/20:** % necesidades/caprichos/ahorro sobre ingresos del mes, barras y consejos dinámicos según hábitos + categoría dominante.
 - **Alertas:** límites mensuales editables por categoría; badge ✓ OK / ⚠️ 80% / ⛔ superado con barra de progreso.
 - **Persistencia:** `localStorage` (`finanzas.transactions.v1`, `finanzas.budgets.v1`, `finanzas.theme.v1`). Botones *Cargar demo* y *Borrar todo*.

@@ -7,7 +7,7 @@ export function renderTable(tbodyId, list, onEdit, onDelete) {
   if (!tbody) return;
   tbody.innerHTML = '';
   if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">Sin transacciones con estos filtros. Agrega una nueva o ajusta la búsqueda.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">Sin transacciones con estos filtros. Agrega una nueva o ajusta la búsqueda.</td></tr>`;
     return;
   }
   const frag = document.createDocumentFragment();
@@ -21,6 +21,7 @@ export function renderTable(tbodyId, list, onEdit, onDelete) {
     const sign = t.type === 'ingreso' ? '+' : '−';
     tr.innerHTML = `
       <td class="px-4 py-3 whitespace-nowrap">${escapeHtml(t.date)}</td>
+      <td class="px-4 py-3 whitespace-nowrap">${escapeHtml(t.time || '—')}</td>
       <td class="px-4 py-3">${badge}</td>
       <td class="px-4 py-3">${escapeHtml(t.category)}</td>
       <td class="px-4 py-3">${escapeHtml(t.note || '—')}</td>
@@ -58,10 +59,10 @@ export async function exportPDF(list, meta) {
   doc.setTextColor(100);
   doc.text(`Generado: ${new Date().toLocaleString('es')}  |  Transacciones: ${list.length}  |  ${meta || ''}`, 40, 68);
   const cur = getCurrency().code;
-  const rows = list.map((t) => [t.date, t.type, t.category, Number(t.amount).toFixed(2), t.note || '']);
+  const rows = list.map((t) => [t.date, t.time || '', t.type, t.category, Number(t.amount).toFixed(2), t.note || '']);
   doc.autoTable({
     startY: 85,
-    head: [['Fecha', 'Tipo', 'Categoría', `Monto (${cur})`, 'Nota']],
+    head: [['Fecha', 'Hora', 'Tipo', 'Categoría', `Monto (${cur})`, 'Nota']],
     body: rows,
     styles: { fontSize: 9 },
     headStyles: { fillColor: [79, 70, 229] }
@@ -78,8 +79,8 @@ function buildPrintArea(list, meta) {
     document.body.appendChild(area);
   }
   area.innerHTML = `<h1>Reporte de Finanzas Personales</h1><p>${escapeHtml(meta || '')} — ${list.length} transacciones</p>` +
-    `<table border="1" cellspacing="0" cellpadding="6"><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Monto</th><th>Nota</th></tr></thead><tbody>` +
-    list.map((t) => `<tr><td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>${escapeHtml(String(t.amount))}</td><td>${escapeHtml(t.note || '')}</td></tr>`).join('') +
+    `<table border="1" cellspacing="0" cellpadding="6"><thead><tr><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Categoría</th><th>Monto</th><th>Nota</th></tr></thead><tbody>` +
+    list.map((t) => `<tr><td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.time || '')}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>${escapeHtml(String(t.amount))}</td><td>${escapeHtml(t.note || '')}</td></tr>`).join('') +
     `</tbody></table>`;
   area.style.display = 'block';
 }
