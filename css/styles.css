@@ -6,6 +6,11 @@ html.dark { color-scheme: dark; }
 select option, select optgroup { background-color: #ffffff; color: #0f172a; }
 html.dark select option, html.dark select optgroup { background-color: #1e293b; color: #f1f5f9; }
 
+/* Tabla de transacciones: alto fijo con scroll interno y cabecera fija */
+.tx-scroll { max-height: 560px; overflow-y: auto; }
+.tx-scroll thead th { position: sticky; top: 0; z-index: 1; background-color: #f8fafc; }
+html.dark .tx-scroll thead th { background-color: #1e293b; }
+
 html { scroll-behavior: smooth; }
 body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
 

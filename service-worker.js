@@ -1,5 +1,5 @@
 /* Service Worker — Finanzas Personales PWA (cache-first con fallback offline) */
-const CACHE_NAME = 'finanzas-pwa-v2';
+const CACHE_NAME = 'finanzas-pwa-v3';
 const ASSETS = [
   './',
   './index.html',
