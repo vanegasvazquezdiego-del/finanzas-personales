@@ -1,5 +1,5 @@
 /* transactions.js — Tabla, filtros, formulario y exportación */
-import { applyFilters, deleteTransaction, downloadCSV, toCSV, getCurrency } from './store.js';
+import { applyFilters, deleteTransaction, downloadCSV, toCSV, getCurrency, fmtTime12h } from './store.js';
 import { fmtMoney } from './charts.js';
 
 export function renderTable(tbodyId, list, onEdit, onDelete) {
@@ -21,7 +21,7 @@ export function renderTable(tbodyId, list, onEdit, onDelete) {
     const sign = t.type === 'ingreso' ? '+' : '−';
     tr.innerHTML = `
       <td class="px-4 py-3 whitespace-nowrap">${escapeHtml(t.date)}</td>
-      <td class="px-4 py-3 whitespace-nowrap">${escapeHtml(t.time || '—')}</td>
+      <td class="px-4 py-3 whitespace-nowrap">${escapeHtml(fmtTime12h(t.time))}</td>
       <td class="px-4 py-3">${badge}</td>
       <td class="px-4 py-3">${escapeHtml(t.category)}</td>
       <td class="px-4 py-3">${escapeHtml(t.note || '—')}</td>
@@ -59,7 +59,7 @@ export async function exportPDF(list, meta) {
   doc.setTextColor(100);
   doc.text(`Generado: ${new Date().toLocaleString('es')}  |  Transacciones: ${list.length}  |  ${meta || ''}`, 40, 68);
   const cur = getCurrency().code;
-  const rows = list.map((t) => [t.date, t.time || '', t.type, t.category, Number(t.amount).toFixed(2), t.note || '']);
+  const rows = list.map((t) => [t.date, fmtTime12h(t.time), t.type, t.category, Number(t.amount).toFixed(2), t.note || '']);
   doc.autoTable({
     startY: 85,
     head: [['Fecha', 'Hora', 'Tipo', 'Categoría', `Monto (${cur})`, 'Nota']],
@@ -80,7 +80,7 @@ function buildPrintArea(list, meta) {
   }
   area.innerHTML = `<h1>Reporte de Finanzas Personales</h1><p>${escapeHtml(meta || '')} — ${list.length} transacciones</p>` +
     `<table border="1" cellspacing="0" cellpadding="6"><thead><tr><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Categoría</th><th>Monto</th><th>Nota</th></tr></thead><tbody>` +
-    list.map((t) => `<tr><td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.time || '')}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>${escapeHtml(String(t.amount))}</td><td>${escapeHtml(t.note || '')}</td></tr>`).join('') +
+    list.map((t) => `<tr><td>${escapeHtml(t.date)}</td><td>${escapeHtml(fmtTime12h(t.time))}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>${escapeHtml(String(t.amount))}</td><td>${escapeHtml(t.note || '')}</td></tr>`).join('') +
     `</tbody></table>`;
   area.style.display = 'block';
 }

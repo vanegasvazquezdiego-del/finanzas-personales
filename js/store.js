@@ -52,6 +52,15 @@ export function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+/* "18:30" -> "6:30 p. m." · "" o inválida -> "—" */
+export function fmtTime12h(t) {
+  if (!t || !/^([01]\d|2[0-3]):[0-5]\d$/.test(t)) return '—';
+  const [h, m] = t.split(':').map(Number);
+  const suffix = h < 12 ? 'a. m.' : 'p. m.';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${String(m).padStart(2, '0')} ${suffix}`;
+}
+
 export function loadTransactions() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
