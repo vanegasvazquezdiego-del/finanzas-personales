@@ -1,5 +1,5 @@
 /* Service Worker — Finanzas Personales PWA (cache-first con fallback offline) */
-const CACHE_NAME = 'finanzas-pwa-v3';
+const CACHE_NAME = 'finanzas-pwa-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -36,19 +36,18 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
+  // Red primero: los cambios publicados se ven de inmediato;
+  // si no hay conexión, se usa la caché (offline).
   event.respondWith(
-    caches.match(request, { ignoreSearch: true }).then((cached) => {
-      const network = fetch(request)
-        .then((res) => {
-          // Solo cachea respuestas del mismo origen y OK
-          if (res && res.status === 200 && res.type === 'basic') {
-            const clone = res.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return res;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
+    fetch(request)
+      .then((res) => {
+        // Solo cachea respuestas del mismo origen y OK
+        if (res && res.status === 200 && new URL(request.url).origin === self.location.origin) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        }
+        return res;
+      })
+      .catch(() => caches.match(request, { ignoreSearch: true }))
   );
 });
